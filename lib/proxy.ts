@@ -2,8 +2,6 @@
  * Edge-compatible proxy utility for forwarding requests to the backend API
  */
 
-import { getRequestContext } from '@cloudflare/next-on-pages';
-
 const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
 export async function proxyToBackend(request: Request, apiPath: string) {
