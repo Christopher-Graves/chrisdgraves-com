@@ -269,7 +269,7 @@ export default function DocketDetailPage({ params }: { params: Promise<{ slug: s
       {/* Top Bar */}
       <div className="border-b border-border bg-card px-3 md:px-6 py-3 md:py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
         <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto">
-          <Button variant="ghost" size="sm" onClick={() => router.push('/video-pipeline')}>
+          <Button variant="ghost" size="sm" onClick={() => router.push('/admin/video-pipeline')}>
             <ArrowLeft className="h-4 w-4 mr-2" /> Back
           </Button>
           <div>

@@ -58,7 +58,7 @@ export default function VideoPipelinePage() {
           </p>
         </div>
         <Link 
-          href="/content-calendar"
+          href="/admin/content-calendar"
           className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
         >
           View Content Calendar →
@@ -78,7 +78,7 @@ export default function VideoPipelinePage() {
             const date = new Date(docket.createdAt);
             
             return (
-              <Link key={docket.slug} href={`/video-pipeline/${docket.slug}`}>
+              <Link key={docket.slug} href={`/admin/video-pipeline/${docket.slug}`}>
                 <Card className="h-full hover:border-primary/50 transition-colors cursor-pointer">
                   <CardHeader>
                     <div className="flex items-start justify-between gap-2 mb-2">
