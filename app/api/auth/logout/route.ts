@@ -1,23 +1,10 @@
 export const runtime = 'edge';
 
-import { proxyToBackend } from '@/lib/proxy';
-
-export async function GET(request: Request) {
-  return proxyToBackend(request, '/api/auth/logout');
-}
-
-export async function POST(request: Request) {
-  return proxyToBackend(request, '/api/auth/logout');
-}
-
-export async function PUT(request: Request) {
-  return proxyToBackend(request, '/api/auth/logout');
-}
-
-export async function DELETE(request: Request) {
-  return proxyToBackend(request, '/api/auth/logout');
-}
-
-export async function PATCH(request: Request) {
-  return proxyToBackend(request, '/api/auth/logout');
+export async function POST() {
+  const response = Response.json({ success: true });
+  response.headers.set(
+    'Set-Cookie',
+    'admin_authenticated=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0'
+  );
+  return response;
 }

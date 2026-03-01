@@ -1,23 +1,21 @@
 export const runtime = 'edge';
 
-import { proxyToBackend } from '@/lib/proxy';
-
-export async function GET(request: Request) {
-  return proxyToBackend(request, '/api/auth');
-}
-
 export async function POST(request: Request) {
-  return proxyToBackend(request, '/api/auth');
-}
+  const { password } = await request.json();
+  const adminPassword = process.env.ADMIN_PASSWORD;
 
-export async function PUT(request: Request) {
-  return proxyToBackend(request, '/api/auth');
-}
+  if (!adminPassword) {
+    return Response.json({ success: false, error: 'ADMIN_PASSWORD not configured' }, { status: 500 });
+  }
 
-export async function DELETE(request: Request) {
-  return proxyToBackend(request, '/api/auth');
-}
+  if (password === adminPassword) {
+    const response = Response.json({ success: true });
+    response.headers.set(
+      'Set-Cookie',
+      `admin_authenticated=true; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7}`
+    );
+    return response;
+  }
 
-export async function PATCH(request: Request) {
-  return proxyToBackend(request, '/api/auth');
+  return Response.json({ success: false, error: 'Invalid password' }, { status: 401 });
 }
