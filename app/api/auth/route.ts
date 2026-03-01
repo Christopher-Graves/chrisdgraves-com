@@ -1,8 +1,19 @@
+import { getRequestContext } from '@cloudflare/next-on-pages';
+
 export const runtime = 'edge';
 
 export async function POST(request: Request) {
   const { password } = await request.json();
-  const adminPassword = process.env.ADMIN_PASSWORD;
+  
+  // Try Cloudflare runtime context first, fall back to process.env
+  let adminPassword: string | undefined;
+  try {
+    const { env } = getRequestContext();
+    adminPassword = (env as any).ADMIN_PASSWORD;
+  } catch {
+    // Fallback to process.env for local development
+    adminPassword = process.env.ADMIN_PASSWORD;
+  }
 
   if (!adminPassword) {
     return Response.json({ success: false, error: 'ADMIN_PASSWORD not configured' }, { status: 500 });
