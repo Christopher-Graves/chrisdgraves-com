@@ -37,10 +37,7 @@ Open [http://localhost:3000](http://localhost:3000)
 npm run build
 ```
 
-### Build for Cloudflare Pages:
-```bash
-npm run pages:build
-```
+The default `npm run build` command now builds for Cloudflare Pages automatically using `@cloudflare/next-on-pages`.
 
 ## Environment Variables
 
@@ -60,11 +57,17 @@ ADMIN_PASSWORD=your-secure-password
 
 ### Cloudflare Pages
 
-This app uses static export (`output: 'export'`) for Cloudflare Pages compatibility.
+This app uses `@cloudflare/next-on-pages` for edge runtime with API routes.
 
-1. Build: `npm run build`
-2. Deploy the `/out` directory to Cloudflare Pages
-3. Set `ADMIN_PASSWORD` environment variable in Cloudflare
+1. Push to GitHub
+2. Cloudflare Pages auto-deploys from `main` branch
+3. Build settings:
+   - Build command: `npm run build`
+   - Build output: `.vercel/output/static`
+4. Environment variables:
+   - `ADMIN_PASSWORD` - Admin dashboard password
+   - `DASHBOARD_API_KEY` - Backend API authentication
+   - `NEXT_PUBLIC_API_URL` - Backend API URL (e.g., https://api.chrisdgraves.com)
 
 ## Project Structure
 

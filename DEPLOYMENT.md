@@ -28,9 +28,10 @@
 - Logout functionality
 - Env var: `ADMIN_PASSWORD`
 
-✅ **Cloudflare Pages Compatible** - Static export configuration
-- `output: 'export'` in next.config.ts
-- Images unoptimized for static hosting
+✅ **Cloudflare Pages Compatible** - Edge runtime with API routes
+- Uses `@cloudflare/next-on-pages` for edge runtime
+- API routes proxy to backend with authentication
+- Images unoptimized for compatibility
 
 ## Tech Stack
 
@@ -67,7 +68,9 @@ ADMIN_PASSWORD=your-secure-password
 npm run build
 ```
 
-This creates a static export in the `/out` directory.
+This creates a Cloudflare Pages edge runtime build in `.vercel/output/static`.
+Note: The build uses `@cloudflare/next-on-pages` which may hang on Windows. 
+Deploy via GitHub integration (Cloudflare runs the build on Linux).
 
 ### 4. Deploy to Cloudflare Pages
 
@@ -76,13 +79,20 @@ This creates a static export in the `/out` directory.
 2. Connect to GitHub repository: `Christopher-Graves/chrisdgraves-com`
 3. Set build settings:
    - Build command: `npm run build`
-   - Build output directory: `out`
-   - Environment variable: `ADMIN_PASSWORD=your-password`
-4. Deploy
+   - Build output directory: `.vercel/output/static`
+   - Root directory: (leave empty)
+   - Node version: 18 or higher
+4. Set environment variables:
+   - `ADMIN_PASSWORD=your-password`
+   - `DASHBOARD_API_KEY=your-api-key`
+   - `NEXT_PUBLIC_API_URL=https://api.chrisdgraves.com` (or your backend URL)
+5. Deploy
 
-#### Option B: Direct Upload
-1. Build locally: `npm run build`
-2. Upload `/out` directory via Cloudflare Pages dashboard
+#### Option B: Wrangler CLI (if configured)
+```bash
+npx wrangler pages deploy .vercel/output/static
+```
+Note: Requires wrangler.toml configuration
 
 ### 5. Custom Domain
 
