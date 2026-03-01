@@ -54,6 +54,13 @@ export default function FinancePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Helper function to safely parse numeric values
+  const safeNumber = (value: any): number => {
+    if (value === null || value === undefined) return 0;
+    const parsed = typeof value === 'string' ? parseFloat(value) : Number(value);
+    return isNaN(parsed) ? 0 : parsed;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -94,9 +101,9 @@ export default function FinancePage() {
     return () => clearInterval(interval);
   }, []);
 
-  const totalBalance = accounts.reduce((sum, acc) => sum + acc.current_balance, 0);
-  const totalBudget = budgets.reduce((sum, b) => sum + b.target_amount, 0);
-  const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);
+  const totalBalance = accounts.reduce((sum, acc) => sum + safeNumber(acc.current_balance), 0);
+  const totalBudget = budgets.reduce((sum, b) => sum + safeNumber(b.target_amount), 0);
+  const totalSpent = budgets.reduce((sum, b) => sum + safeNumber(b.spent), 0);
 
   if (loading) {
     return (
@@ -211,11 +218,11 @@ export default function FinancePage() {
                     </div>
                     <div className="text-right">
                       <div className="font-semibold">
-                        ${account.current_balance.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        ${safeNumber(account.current_balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                       </div>
                       {account.available_balance && (
                         <div className="text-xs text-muted-foreground">
-                          ${account.available_balance.toLocaleString('en-US', { minimumFractionDigits: 2 })} available
+                          ${safeNumber(account.available_balance).toLocaleString('en-US', { minimumFractionDigits: 2 })} available
                         </div>
                       )}
                     </div>
@@ -245,7 +252,7 @@ export default function FinancePage() {
                         {budget.icon} {budget.category}
                       </span>
                       <span className="font-medium">
-                        ${budget.spent.toFixed(2)} / ${budget.target_amount.toFixed(2)}
+                        ${safeNumber(budget.spent).toFixed(2)} / ${safeNumber(budget.target_amount).toFixed(2)}
                       </span>
                     </div>
                     <div className="h-2 bg-accent rounded-full overflow-hidden">
@@ -257,7 +264,7 @@ export default function FinancePage() {
                             ? 'bg-orange-500'
                             : 'bg-emerald-500'
                         }`}
-                        style={{ width: `${Math.min(budget.percent_used, 100)}%` }}
+                        style={{ width: `${Math.min(safeNumber(budget.percent_used), 100)}%` }}
                       />
                     </div>
                   </div>
@@ -292,8 +299,8 @@ export default function FinancePage() {
                         {txn.icon} {txn.category} • {new Date(txn.date).toLocaleDateString()}
                       </div>
                     </div>
-                    <div className={`font-semibold ${txn.amount < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
-                      {txn.amount < 0 ? '-' : '+'}${Math.abs(txn.amount).toFixed(2)}
+                    <div className={`font-semibold ${safeNumber(txn.amount) < 0 ? 'text-red-400' : 'text-emerald-400'}`}>
+                      {safeNumber(txn.amount) < 0 ? '-' : '+'}${Math.abs(safeNumber(txn.amount)).toFixed(2)}
                     </div>
                   </div>
                 ))}
@@ -325,7 +332,7 @@ export default function FinancePage() {
                       </div>
                     </div>
                     <div className="font-semibold">
-                      ${cat.total_spent.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                      ${safeNumber(cat.total_spent).toLocaleString('en-US', { minimumFractionDigits: 2 })}
                     </div>
                   </div>
                 ))}
