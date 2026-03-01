@@ -16,6 +16,25 @@ export async function proxyToBackend(request: Request, apiPath: string) {
       }
     });
 
+    // Add API key authentication for dashboard API
+    // In Cloudflare Pages, use getRequestContext().env.DASHBOARD_API_KEY
+    // For local dev, fall back to process.env
+    let apiKey: string | undefined;
+    try {
+      // @ts-ignore - Cloudflare Pages context
+      const { env } = getRequestContext();
+      apiKey = env?.DASHBOARD_API_KEY;
+    } catch {
+      // Fallback for local development
+      apiKey = process.env.DASHBOARD_API_KEY;
+    }
+
+    if (apiKey) {
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+      console.warn('[SECURITY] DASHBOARD_API_KEY not found in environment');
+    }
+
     const options: RequestInit = {
       method: request.method,
       headers,
