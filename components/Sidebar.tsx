@@ -4,27 +4,51 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import {
-  LayoutDashboard,
-  Wallet,
+  Bot,
+  MessageSquare,
+  Clock,
+  Bell,
+  CheckSquare,
+  DollarSign,
+  AlertTriangle,
+  Database,
+  Brain,
+  CalendarDays,
+  Users,
+  Video,
+  Layers,
+  Activity,
+  Film,
+  FolderOpen,
   Menu,
   X,
-  LogOut,
+  Wallet,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navigation = [
-  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'Agents', href: '/admin', icon: Bot },
+  { name: 'Team', href: '/admin/team', icon: Users },
+  { name: 'Chat', href: '/admin/chat', icon: MessageSquare },
+  { name: 'Memory', href: '/admin/memory', icon: Brain },
   { name: 'Finance', href: '/admin/finance', icon: Wallet },
+  { name: 'Cron Jobs', href: '/admin/crons', icon: Clock },
+  { name: 'Calendar', href: '/admin/calendar', icon: CalendarDays },
+  { name: 'Reminders', href: '/admin/reminders', icon: Bell },
+  { name: 'Content Calendar', href: '/admin/content-calendar', icon: Video },
+  { name: 'Video Pipeline', href: '/admin/video-pipeline', icon: Film },
+  { name: 'Tasks', href: '/admin/tasks', icon: CheckSquare },
+  { name: 'Sessions', href: '/admin/sessions', icon: Layers },
+  { name: 'Agent Files', href: '/admin/files', icon: FolderOpen },
+  { name: 'Claude Usage', href: '/admin/usage', icon: Activity },
+  { name: 'Token Usage', href: '/admin/tokens', icon: DollarSign },
+  { name: 'Errors', href: '/admin/errors', icon: AlertTriangle },
+  { name: 'Database', href: '/admin/database', icon: Database },
 ];
 
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-
-  const handleLogout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
-    window.location.href = '/';
-  };
 
   return (
     <>
@@ -53,13 +77,11 @@ export function Sidebar() {
         )}
       >
         <div className="mb-4 flex items-center justify-center">
-          <div className="h-8 w-8 rounded-full bg-burnt flex items-center justify-center text-cream font-bold text-sm">
-            CG
-          </div>
+          <Bot className="h-8 w-8 text-primary" />
         </div>
-        <nav className="flex flex-col gap-2 px-2 flex-1">
+        <nav className="flex flex-col gap-2 px-2">
           {navigation.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href));
             return (
               <Link
                 key={item.name}
@@ -78,15 +100,6 @@ export function Sidebar() {
             );
           })}
         </nav>
-        <div className="px-2">
-          <button
-            onClick={handleLogout}
-            className="flex h-12 w-12 items-center justify-center rounded-lg transition-colors text-muted-foreground hover:bg-accent hover:text-accent-foreground"
-            title="Logout"
-          >
-            <LogOut className="h-5 w-5" />
-          </button>
-        </div>
       </div>
     </>
   );

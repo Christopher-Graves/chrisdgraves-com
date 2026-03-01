@@ -1,8 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // For Cloudflare Pages compatibility
-  output: 'export',
+  // Removed static export to support API routes for admin dashboard
   images: {
     unoptimized: true
   }
