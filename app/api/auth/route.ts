@@ -20,12 +20,13 @@ export async function POST(request: Request) {
   }
 
   if (password === adminPassword) {
-    const response = Response.json({ success: true });
-    response.headers.set(
-      'Set-Cookie',
-      `admin_authenticated=true; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7}`
-    );
-    return response;
+    return new Response(JSON.stringify({ success: true }), {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Set-Cookie': `admin_authenticated=true; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${60 * 60 * 24 * 7}`
+      }
+    });
   }
 
   return Response.json({ success: false, error: 'Invalid password' }, { status: 401 });
