@@ -127,7 +127,7 @@ export default function FinancePage() {
   }
 
   const handleConnectBank = () => {
-    window.open('https://finance-tracker-596005283386.us-east1.run.app', '_blank', 'width=600,height=800');
+    window.open('https://api.chrisdgraves.com', '_blank', 'width=600,height=800');
   };
 
   return (
