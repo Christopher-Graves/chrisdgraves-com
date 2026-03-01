@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Account {
@@ -118,13 +119,22 @@ export default function FinancePage() {
     );
   }
 
+  const handleConnectBank = () => {
+    window.open('https://finance-tracker-596005283386.us-east1.run.app', '_blank', 'width=600,height=800');
+  };
+
   return (
     <div className="p-4 md:p-6 lg:p-8">
-      <div className="mb-6 md:mb-8">
-        <h1 className="text-2xl md:text-3xl font-bold tracking-tight">💰 Finance</h1>
-        <p className="text-sm md:text-base text-muted-foreground">
-          Track your spending, budgets, and accounts
-        </p>
+      <div className="mb-6 md:mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight">💰 Finance</h1>
+          <p className="text-sm md:text-base text-muted-foreground">
+            Track your spending, budgets, and accounts
+          </p>
+        </div>
+        <Button onClick={handleConnectBank} variant="default">
+          🏦 Connect Bank
+        </Button>
       </div>
 
       {/* Summary Cards */}
