@@ -101,6 +101,7 @@ export default function FinancePage() {
     return () => clearInterval(interval);
   }, []);
 
+  // Calculate total balance (assets - liabilities)
   const totalBalance = accounts.reduce((sum, acc) => sum + safeNumber(acc.current_balance), 0);
   const totalBudget = budgets.reduce((sum, b) => sum + safeNumber(b.target_amount), 0);
   const totalSpent = budgets.reduce((sum, b) => sum + safeNumber(b.spent), 0);
@@ -208,26 +209,34 @@ export default function FinancePage() {
               </p>
             ) : (
               <div className="space-y-3">
-                {accounts.map((account) => (
-                  <div key={account.id} className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
-                    <div>
-                      <div className="font-medium">{account.name}</div>
-                      <div className="text-xs text-muted-foreground">
-                        {account.institution_name} •••• {account.mask}
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold">
-                        ${safeNumber(account.current_balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </div>
-                      {account.available_balance && (
-                        <div className="text-xs text-muted-foreground">
-                          ${safeNumber(account.available_balance).toLocaleString('en-US', { minimumFractionDigits: 2 })} available
+                {accounts.map((account) => {
+                  const balance = safeNumber(account.current_balance);
+                  const isDebt = account.type === 'credit' || balance < 0;
+                  
+                  return (
+                    <div key={account.id} className="flex items-center justify-between p-3 rounded-lg bg-accent/50">
+                      <div>
+                        <div className="font-medium">
+                          {account.name}
+                          {isDebt && <span className="ml-2 text-xs text-red-400">(Debt)</span>}
                         </div>
-                      )}
+                        <div className="text-xs text-muted-foreground">
+                          {account.institution_name} •••• {account.mask}
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className={`font-semibold ${isDebt ? 'text-red-400' : ''}`}>
+                          ${Math.abs(balance).toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                        </div>
+                        {account.available_balance !== null && (
+                          <div className="text-xs text-muted-foreground">
+                            ${Math.abs(safeNumber(account.available_balance)).toLocaleString('en-US', { minimumFractionDigits: 2 })} available
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
