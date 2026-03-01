@@ -1,13 +1,48 @@
-import { NextResponse } from 'next/server';
+export const runtime = 'edge';
 
-// NOTE: The gateway has no REST API. Crons can only be triggered via WebSocket
-// or via the OpenClaw CLI: `openclaw cron run <id>`
-// This endpoint is intentionally disabled.
-export async function POST() {
-  return NextResponse.json(
-    {
-      error: 'Manual cron triggering via REST is not supported. Use the OpenClaw CLI: openclaw cron run <id>',
-    },
-    { status: 501 }
-  );
+import { proxyToBackend } from '@/lib/proxy';
+
+export async function GET(request: Request, { params }: { params: Promise<Record<string, string>> }) {
+  const resolved = await params;
+  let dynamicPath = '/api/crons/[id]/run';
+  for (const [key, value] of Object.entries(resolved)) {
+    dynamicPath = dynamicPath.replace(`[${key}]`, value);
+  }
+  return proxyToBackend(request, dynamicPath);
+}
+
+export async function POST(request: Request, { params }: { params: Promise<Record<string, string>> }) {
+  const resolved = await params;
+  let dynamicPath = '/api/crons/[id]/run';
+  for (const [key, value] of Object.entries(resolved)) {
+    dynamicPath = dynamicPath.replace(`[${key}]`, value);
+  }
+  return proxyToBackend(request, dynamicPath);
+}
+
+export async function PUT(request: Request, { params }: { params: Promise<Record<string, string>> }) {
+  const resolved = await params;
+  let dynamicPath = '/api/crons/[id]/run';
+  for (const [key, value] of Object.entries(resolved)) {
+    dynamicPath = dynamicPath.replace(`[${key}]`, value);
+  }
+  return proxyToBackend(request, dynamicPath);
+}
+
+export async function DELETE(request: Request, { params }: { params: Promise<Record<string, string>> }) {
+  const resolved = await params;
+  let dynamicPath = '/api/crons/[id]/run';
+  for (const [key, value] of Object.entries(resolved)) {
+    dynamicPath = dynamicPath.replace(`[${key}]`, value);
+  }
+  return proxyToBackend(request, dynamicPath);
+}
+
+export async function PATCH(request: Request, { params }: { params: Promise<Record<string, string>> }) {
+  const resolved = await params;
+  let dynamicPath = '/api/crons/[id]/run';
+  for (const [key, value] of Object.entries(resolved)) {
+    dynamicPath = dynamicPath.replace(`[${key}]`, value);
+  }
+  return proxyToBackend(request, dynamicPath);
 }

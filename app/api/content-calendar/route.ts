@@ -1,31 +1,23 @@
-import { NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
+export const runtime = 'edge';
 
-const CONTENT_CALENDAR_PATH = path.join(
-  'C:',
-  'Users',
-  'chris',
-  '.openclaw',
-  'workspace-youtube',
-  'content-calendar.json'
-);
+import { proxyToBackend } from '@/lib/proxy';
 
-export async function GET() {
-  try {
-    if (!fs.existsSync(CONTENT_CALENDAR_PATH)) {
-      return NextResponse.json({ videos: [] });
-    }
+export async function GET(request: Request) {
+  return proxyToBackend(request, '/api/content-calendar');
+}
 
-    const data = fs.readFileSync(CONTENT_CALENDAR_PATH, 'utf-8');
-    const json = JSON.parse(data);
-    
-    return NextResponse.json(json);
-  } catch (error) {
-    console.error('Error reading content calendar:', error);
-    return NextResponse.json(
-      { error: 'Failed to read content calendar' },
-      { status: 500 }
-    );
-  }
+export async function POST(request: Request) {
+  return proxyToBackend(request, '/api/content-calendar');
+}
+
+export async function PUT(request: Request) {
+  return proxyToBackend(request, '/api/content-calendar');
+}
+
+export async function DELETE(request: Request) {
+  return proxyToBackend(request, '/api/content-calendar');
+}
+
+export async function PATCH(request: Request) {
+  return proxyToBackend(request, '/api/content-calendar');
 }

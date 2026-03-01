@@ -1,8 +1,23 @@
-import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+export const runtime = 'edge';
 
-export async function POST() {
-  const cookieStore = await cookies();
-  cookieStore.delete('admin_authenticated');
-  return NextResponse.json({ success: true });
+import { proxyToBackend } from '@/lib/proxy';
+
+export async function GET(request: Request) {
+  return proxyToBackend(request, '/api/auth/logout');
+}
+
+export async function POST(request: Request) {
+  return proxyToBackend(request, '/api/auth/logout');
+}
+
+export async function PUT(request: Request) {
+  return proxyToBackend(request, '/api/auth/logout');
+}
+
+export async function DELETE(request: Request) {
+  return proxyToBackend(request, '/api/auth/logout');
+}
+
+export async function PATCH(request: Request) {
+  return proxyToBackend(request, '/api/auth/logout');
 }
