@@ -56,11 +56,14 @@ export default function FinancePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Use environment variable for finance API URL, default to local proxy
+        const financeApiUrl = process.env.NEXT_PUBLIC_FINANCE_API_URL || '/api/finance';
+        
         const [accountsRes, budgetsRes, transactionsRes, spendingRes] = await Promise.all([
-          fetch('/api/finance/accounts'),
-          fetch('/api/finance/budgets'),
-          fetch('/api/finance/transactions?limit=10'),
-          fetch('/api/finance/spending'),
+          fetch(`${financeApiUrl}/accounts`),
+          fetch(`${financeApiUrl}/budgets`),
+          fetch(`${financeApiUrl}/transactions?limit=10`),
+          fetch(`${financeApiUrl}/spending`),
         ]);
 
         if (!accountsRes.ok || !budgetsRes.ok || !transactionsRes.ok || !spendingRes.ok) {
