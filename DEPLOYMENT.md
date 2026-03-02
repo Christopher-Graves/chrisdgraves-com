@@ -1,200 +1,48 @@
-# Deployment Guide
+# Deployment Configuration
 
-## What Was Built
+## Cloudflare Pages Environment Variables
 
-✅ **Landing Page (`/`)** - GQ Magazine-inspired design rebuilt in Next.js
-- Hero section with name and tagline
-- Social links (YouTube, Twitter, LinkedIn, GitHub, Email)
-- 5 content pillars with SpotlightCard components
-- About section ("The Journey")
-- Framer Motion animations
-- Brand colors: Deep Navy, Charcoal, Burnt Orange, Cream, Beige
-- Fonts: Bebas Neue (display) + Inter (body)
+The following environment variables must be set in the Cloudflare Pages dashboard for the finance page to work correctly:
 
-✅ **Admin Dashboard (`/admin`)** - Password-protected admin area
-- Dashboard overview with Cozmos status, YouTube progress, 2026 goals
-- Quick notes section
-- Tony Dashboard components integrated (Sidebar, Card, Badge, Button)
-
-✅ **Finance Tracker (`/admin/finance`)** - Frontend UI for Python/Plaid backend
-- Account overview (total balance, monthly income/expenses, savings rate)
-- Connected accounts display
-- Recent transactions list
-- Note about Python backend integration
-
-✅ **Authentication** - Middleware-based password protection
-- Login page at `/admin/login`
-- Cookie-based session (7 days)
-- Logout functionality
-- Env var: `ADMIN_PASSWORD`
-
-✅ **Cloudflare Pages Compatible** - Edge runtime with API routes
-- Uses `@cloudflare/next-on-pages` for edge runtime
-- API routes proxy to backend with authentication
-- Images unoptimized for compatibility
-
-## Tech Stack
-
-- **Framework:** Next.js 15.3.2 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS 3.4.19
-- **Animation:** Framer Motion 12.34.3
-- **UI Components:** Radix UI primitives (Dialog, Dropdown, Select, Slot, Tabs)
-- **Icons:** Lucide React
-- **Charts:** Recharts (for future finance visualizations)
-
-## Deployment Instructions
-
-### 1. Local Development
-
-```bash
-cd C:\Users\chris\.openclaw\workspace-engineering\chrisdgraves-com
-npm install
-npm run dev
-```
-
-Visit `http://localhost:3000`
-
-### 2. Set Environment Variables
-
-Create `.env.local`:
-```env
-ADMIN_PASSWORD=your-secure-password
-```
-
-### 3. Build for Production
-
-```bash
-npm run build
-```
-
-This creates a Cloudflare Pages edge runtime build in `.vercel/output/static`.
-Note: The build uses `@cloudflare/next-on-pages` which may hang on Windows. 
-Deploy via GitHub integration (Cloudflare runs the build on Linux).
-
-### 4. Deploy to Cloudflare Pages
-
-#### Option A: GitHub Integration (Recommended)
-1. Go to Cloudflare Dashboard → Pages
-2. Connect to GitHub repository: `Christopher-Graves/chrisdgraves-com`
-3. Set build settings:
-   - Build command: `npm run build`
-   - Build output directory: `.vercel/output/static`
-   - Root directory: (leave empty)
-   - Node version: 18 or higher
-4. Set environment variables:
-   - `ADMIN_PASSWORD=your-password`
-   - `DASHBOARD_API_KEY=your-api-key`
-   - `NEXT_PUBLIC_API_URL=https://api.chrisdgraves.com` (or your backend URL)
-5. Deploy
-
-#### Option B: Wrangler CLI (if configured)
-```bash
-npx wrangler pages deploy .vercel/output/static
-```
-Note: Requires wrangler.toml configuration
-
-### 5. Custom Domain
-
-In Cloudflare Pages:
-1. Go to Custom Domains
-2. Add `chrisdgraves.com` and `www.chrisdgraves.com`
-3. DNS records are auto-configured
-
-## File Structure
+### Required Variables
 
 ```
-chrisdgraves-com/
-├── app/
-│   ├── admin/
-│   │   ├── finance/
-│   │   │   └── page.tsx          # Finance tracker UI
-│   │   ├── login/
-│   │   │   └── page.tsx          # Login page
-│   │   ├── layout.tsx            # Admin layout with sidebar
-│   │   └── page.tsx              # Admin dashboard
-│   ├── api/
-│   │   └── auth/
-│   │       ├── route.ts          # Login API
-│   │       └── logout/
-│   │           └── route.ts      # Logout API
-│   ├── globals.css               # Global styles + Tailwind
-│   ├── layout.tsx                # Root layout
-│   └── page.tsx                  # Landing page
-├── components/
-│   ├── ui/                       # Radix UI components (from tony-dashboard)
-│   │   ├── badge.tsx
-│   │   ├── button.tsx
-│   │   └── card.tsx
-│   ├── Sidebar.tsx               # Admin sidebar navigation
-│   └── SpotlightCard.tsx         # Interactive spotlight effect card
-├── lib/
-│   └── utils.ts                  # Tailwind merge utility
-├── middleware.ts                 # Auth middleware (protects /admin)
-├── next.config.ts                # Next.js config (static export)
-├── tailwind.config.ts            # Tailwind config (brand colors)
-└── package.json
+NEXT_PUBLIC_FINANCE_API_URL=https://dashboard-api.chrisdgraves.com
+NEXT_PUBLIC_API_URL=https://dashboard-api.chrisdgraves.com
+DASHBOARD_API_KEY=SQqy50zOZp/gI9Bzcj47q0lVHiZ8It/S7UaYi69yvXQ/O3nyaXrz22AM7dtcfHsH
 ```
 
-## Authentication Flow
+### Why These Are Needed
 
-1. User visits `/admin/*` routes
-2. Middleware checks for `admin_authenticated` cookie
-3. If not authenticated → redirect to `/admin/login`
-4. User enters password
-5. POST to `/api/auth` → validates against `ADMIN_PASSWORD`
-6. If valid → sets cookie, redirects to `/admin`
-7. Logout → DELETE cookie via `/api/auth/logout`
+- `NEXT_PUBLIC_FINANCE_API_URL`: The frontend finance page calls this API to fetch financial data
+- `NEXT_PUBLIC_API_URL`: General API base URL for other dashboard features
+- `DASHBOARD_API_KEY`: Bearer token for authenticating with the tony-dashboard API
 
-## Finance Tracker Integration
+### Backend Architecture
 
-The finance tracker UI (`/admin/finance`) is a frontend for the Python/Plaid backend located at:
-```
-C:\Users\chris\.openclaw\workspace\finance-tracker
-```
+1. **Frontend (chrisdgraves-com)**: Static site deployed to Cloudflare Pages
+2. **API Backend (tony-dashboard)**: Next.js app running locally on localhost:3000
+3. **Cloudflare Tunnel**: Exposes localhost:3000 as https://dashboard-api.chrisdgraves.com
+4. **Database**: PostgreSQL at localhost:5432 (accessed by tony-dashboard only)
 
-To connect:
-1. Start the Python backend separately
-2. Update API endpoints in `/admin/finance/page.tsx` to point to backend
-3. Currently shows mock data - replace with real API calls
+The frontend NEVER connects directly to PostgreSQL - it always proxies through the tony-dashboard API.
 
-## Brand Guidelines
+## Setting Environment Variables
 
-### Colors
-- **Deep Navy** (#1C2A3A) - Primary background
-- **Charcoal** (#2B2B2B) - Cards, surfaces
-- **Burnt Orange** (#D97642) - Accents, CTAs, highlights
-- **Cream** (#F4F1E8) - Primary text, headings
-- **Beige** (#D4C5A9) - Secondary text
+1. Go to Cloudflare Pages dashboard
+2. Select the chrisdgraves-com project
+3. Go to Settings → Environment variables
+4. Add the variables listed above for both Production and Preview environments
+5. Redeploy the site for changes to take effect
 
-### Typography
-- **Bebas Neue** - Display font (headings, hero)
-- **Inter** - Body font (paragraphs, UI)
+## Verifying Deployment
 
-### Design Philosophy
-- Cinematic, premium feel
-- Warm and refined aesthetic
-- GQ Magazine-inspired layout
-- Generous whitespace
-- Subtle grain texture overlay
-- Spotlight hover effects on cards
+After deployment, check:
+- https://chrisdgraves.com/admin/finance should load without 502 errors
+- Financial data should display correctly
+- Budget progress bar should show current spending
 
-## Next Steps
-
-1. ✅ Deploy to Cloudflare Pages
-2. ⬜ Connect real finance tracker API
-3. ⬜ Add social media links (YouTube, Twitter URLs)
-4. ⬜ Add analytics (Cloudflare Web Analytics)
-5. ⬜ Consider blog/content section for YouTube video embeds
-6. ⬜ Add contact form (could use Cloudflare Workers for backend)
-
-## GitHub Repository
-
-**Repo:** `git@github-tony:Christopher-Graves/chrisdgraves-com.git`
-**Branch:** `main`
-**Last commit:** Initial Next.js rebuild
-
----
-
-Built by Gilfoyle (Engineering) for Tony HQ
-Deployed: 2026-02-28
+If issues persist, check:
+- Cloudflare tunnel is running (dashboard-api.chrisdgraves.com is accessible)
+- tony-dashboard is running on localhost:3000
+- Environment variables are set correctly in Cloudflare Pages
