@@ -7,8 +7,8 @@ The following environment variables must be set in the Cloudflare Pages dashboar
 ### Required Variables
 
 ```
-NEXT_PUBLIC_FINANCE_API_URL=https://dashboard-api.chrisdgraves.com
-NEXT_PUBLIC_API_URL=https://dashboard-api.chrisdgraves.com
+NEXT_PUBLIC_FINANCE_API_URL=https://admin.chrisdgraves.com
+NEXT_PUBLIC_API_URL=https://admin.chrisdgraves.com
 DASHBOARD_API_KEY=SQqy50zOZp/gI9Bzcj47q0lVHiZ8It/S7UaYi69yvXQ/O3nyaXrz22AM7dtcfHsH
 ```
 
@@ -22,7 +22,7 @@ DASHBOARD_API_KEY=SQqy50zOZp/gI9Bzcj47q0lVHiZ8It/S7UaYi69yvXQ/O3nyaXrz22AM7dtcfH
 
 1. **Frontend (chrisdgraves-com)**: Static site deployed to Cloudflare Pages
 2. **API Backend (tony-dashboard)**: Next.js app running locally on localhost:3000
-3. **Cloudflare Tunnel**: Exposes localhost:3000 as https://dashboard-api.chrisdgraves.com
+3. **Cloudflare Tunnel**: Exposes localhost:3000 as https://admin.chrisdgraves.com
 4. **Database**: PostgreSQL at localhost:5432 (accessed by tony-dashboard only)
 
 The frontend NEVER connects directly to PostgreSQL - it always proxies through the tony-dashboard API.
@@ -43,6 +43,6 @@ After deployment, check:
 - Budget progress bar should show current spending
 
 If issues persist, check:
-- Cloudflare tunnel is running (dashboard-api.chrisdgraves.com is accessible)
+- Cloudflare tunnel is running (admin.chrisdgraves.com is accessible)
 - tony-dashboard is running on localhost:3000
 - Environment variables are set correctly in Cloudflare Pages
