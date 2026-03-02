@@ -7,8 +7,8 @@ The following environment variables must be set in the Cloudflare Pages dashboar
 ### Required Variables
 
 ```
-NEXT_PUBLIC_FINANCE_API_URL=https://admin.chrisdgraves.com
-NEXT_PUBLIC_API_URL=https://admin.chrisdgraves.com
+NEXT_PUBLIC_FINANCE_API_URL=https://dashboard-api.chrisdgraves.com
+NEXT_PUBLIC_API_URL=https://dashboard-api.chrisdgraves.com
 DASHBOARD_API_KEY=SQqy50zOZp/gI9Bzcj47q0lVHiZ8It/S7UaYi69yvXQ/O3nyaXrz22AM7dtcfHsH
 ```
 
